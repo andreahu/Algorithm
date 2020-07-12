@@ -1,0 +1,1 @@
+typeSearchIndex = [{"p":"cscie55.hw8.problem1","l":"GsonTweetEater"},{"p":"cscie55.hw8.problem1","l":"GsonTweetEater.IntSumReducer"},{"p":"cscie55.hw8.problem1","l":"GsonTweetEater.TokenizerMapper"}]

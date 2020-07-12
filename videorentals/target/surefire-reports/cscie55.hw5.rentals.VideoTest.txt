@@ -1,0 +1,4 @@
+-------------------------------------------------------------------------------
+Test set: cscie55.hw5.rentals.VideoTest
+-------------------------------------------------------------------------------
+Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0 sec - in cscie55.hw5.rentals.VideoTest

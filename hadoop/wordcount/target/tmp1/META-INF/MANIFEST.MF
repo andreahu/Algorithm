@@ -1,0 +1,7 @@
+Manifest-Version: 1.0
+Archiver-Version: Plexus Archiver
+Created-By: Apache Maven
+Built-By: HU-student
+Build-Jdk: 10.0.1
+Main-Class: cscie55.hw7.problem1.WordHistogram
+
