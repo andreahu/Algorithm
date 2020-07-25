@@ -60,49 +60,55 @@ def load_data(filename):
     is 1 if Revenue is true, and 0 otherwise.
     """
 
-    #ah: https://us.edstem.org/courses/331/discussion/93268
-    #ah: use panda library?
+    #ah: month: june is 4 letters. https://us.edstem.org/courses/331/discussion/93268
+    #ah: ta saide could use panda library?
 
     evidence = []
     labels = []
 
     with open(sys.argv[1]) as file:
         reader = csv.DictReader(file) #not can't run, try reader instead of dictreader?
+        converterDic = []
+        converterDic["Jan"] = 0
+        converterDic["Feb"] = 1
+        converterDic["Mar"] = 2
+        converterDic["Apr"] = 3
+        converterDic["May"] = 4
+        converterDic["June"] = 5
+        converterDic["Jul"] = 6
+        converterDic["Aug"] = 7
+        converterDic["Sep"] = 8
+        converterDic["Oct"] = 9
+        converterDic["Nov"] = 10
+        converterDic["Dec"] = 11
+        converterDic["Returning_Visitor"] = 1
+        converterDic["New_Visitor"] = 0
+        converterDic["TRUE"] = 1
+        converterDic["FALSE"] = 0
         for row in reader:
-            evidenceElement = []
-            evidenceElement.append(int(row[0]))
-            evidenceElement.append(float(row[1]))
-            evidenceElement.append(int(row[2]))
-            evidenceElement.append(float(row[3]))
-            evidenceElement.append(int(row[4]))
-            evidenceElement.append(float(row[5]))
-            evidenceElement.append(float(row[6]))
-            evidenceElement.append(float(row[7]))
-            evidenceElement.append(float(row[8]))
-            evidenceElement.append(float(row[9]))
+            evidenceThisRow = []
+            evidenceThisRow.append(int(row[0]))
+            evidenceThisRow.append(float(row[1]))
+            evidenceThisRow.append(int(row[2]))
+            evidenceThisRow.append(float(row[3]))
+            evidenceThisRow.append(int(row[4]))
+            evidenceThisRow.append(float(row[5]))
+            evidenceThisRow.append(float(row[6]))
+            evidenceThisRow.append(float(row[7]))
+            evidenceThisRow.append(float(row[8]))
+            evidenceThisRow.append(float(row[9]))
+            evidenceThisRow.append(converterDic[row[10]])
+            evidenceThisRow.append(int(row[11]))
+            evidenceThisRow.append(int(row[12]))
+            evidenceThisRow.append(int(row[13]))
+            evidenceThisRow.append(int(row[14]))
+            evidenceThisRow.append(converterDic[row[15]])
+            evidenceThisRow.append(converterDic[row[16]])
 
+            evidence.append(evidenceThisRow)
+            labels.append(converterDic[row[17]])
 
-
-
-
-
-
-
-
-
-            evidenceElement.append(int(row[]))
-            evidenceElement.append(float(row[]))
-
-
-
-
-
-
-
-
-
-
-
+    return (evidence,labels)
 
 
 def train_model(evidence, labels):
@@ -110,7 +116,12 @@ def train_model(evidence, labels):
     Given a list of evidence lists and a list of labels, return a
     fitted k-nearest neighbor model (k=1) trained on the data.
     """
-    raise NotImplementedError
+
+    fit(evidence, labels)
+
+    #ah: what to return?
+
+
 
 
 def evaluate(labels, predictions):
@@ -128,7 +139,12 @@ def evaluate(labels, predictions):
     representing the "true negative rate": the proportion of
     actual negative labels that were accurately identified.
     """
-    raise NotImplementedError
+    
+    
+
+
+
+
 
 
 if __name__ == "__main__":
