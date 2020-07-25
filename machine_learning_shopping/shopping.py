@@ -60,9 +60,6 @@ def load_data(filename):
     is 1 if Revenue is true, and 0 otherwise.
     """
 
-    #ah: month: june is 4 letters. https://us.edstem.org/courses/331/discussion/93268
-    #ah: ta saide could use panda library?
-
     evidence = []
     labels = []
 
@@ -140,11 +137,6 @@ def train_model(evidence, labels):
     neigh = KNeighborsClassifier(n_neighbors=1)
 
     return neigh.fit(evidence, labels)
-
-    #ah: what to return?
-
-
-
 
 def evaluate(labels, predictions):
     """
