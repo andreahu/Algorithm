@@ -68,7 +68,7 @@ def load_data(filename):
 
     with open(sys.argv[1]) as file:
         reader = csv.DictReader(file) #not can't run, try reader instead of dictreader?
-        converterDic = []
+        converterDic = dict()
         converterDic["Jan"] = 0
         converterDic["Feb"] = 1
         converterDic["Mar"] = 2
@@ -82,31 +82,51 @@ def load_data(filename):
         converterDic["Nov"] = 10
         converterDic["Dec"] = 11
         converterDic["Returning_Visitor"] = 1
+        converterDic["Other"] = 0
         converterDic["New_Visitor"] = 0
         converterDic["TRUE"] = 1
         converterDic["FALSE"] = 0
         for row in reader:
+            # evidenceThisRow = []
+            # evidenceThisRow.append(int(row[0]))
+            # evidenceThisRow.append(float(row[1]))
+            # evidenceThisRow.append(int(row[2]))
+            # evidenceThisRow.append(float(row[3]))
+            # evidenceThisRow.append(int(row[4]))
+            # evidenceThisRow.append(float(row[5]))
+            # evidenceThisRow.append(float(row[6]))
+            # evidenceThisRow.append(float(row[7]))
+            # evidenceThisRow.append(float(row[8]))
+            # evidenceThisRow.append(float(row[9]))
+            # evidenceThisRow.append(converterDic[row[10]])
+            # evidenceThisRow.append(int(row[11]))
+            # evidenceThisRow.append(int(row[12]))
+            # evidenceThisRow.append(int(row[13]))
+            # evidenceThisRow.append(int(row[14]))
+            # evidenceThisRow.append(converterDic[row[15]])
+            # evidenceThisRow.append(converterDic[row[16]])
+
             evidenceThisRow = []
-            evidenceThisRow.append(int(row[0]))
-            evidenceThisRow.append(float(row[1]))
-            evidenceThisRow.append(int(row[2]))
-            evidenceThisRow.append(float(row[3]))
-            evidenceThisRow.append(int(row[4]))
-            evidenceThisRow.append(float(row[5]))
-            evidenceThisRow.append(float(row[6]))
-            evidenceThisRow.append(float(row[7]))
-            evidenceThisRow.append(float(row[8]))
-            evidenceThisRow.append(float(row[9]))
-            evidenceThisRow.append(converterDic[row[10]])
-            evidenceThisRow.append(int(row[11]))
-            evidenceThisRow.append(int(row[12]))
-            evidenceThisRow.append(int(row[13]))
-            evidenceThisRow.append(int(row[14]))
-            evidenceThisRow.append(converterDic[row[15]])
-            evidenceThisRow.append(converterDic[row[16]])
+            evidenceThisRow.append(int(row['Administrative']))
+            evidenceThisRow.append(float(row['Administrative_Duration']))
+            evidenceThisRow.append(int(row['Informational']))
+            evidenceThisRow.append(float(row['Informational_Duration']))
+            evidenceThisRow.append(int(row['ProductRelated']))
+            evidenceThisRow.append(float(row['ProductRelated_Duration']))
+            evidenceThisRow.append(float(row['BounceRates']))
+            evidenceThisRow.append(float(row['ExitRates']))
+            evidenceThisRow.append(float(row['PageValues']))
+            evidenceThisRow.append(float(row['SpecialDay']))
+            evidenceThisRow.append(converterDic[row['Month']])
+            evidenceThisRow.append(int(row['OperatingSystems']))
+            evidenceThisRow.append(int(row['Browser']))
+            evidenceThisRow.append(int(row['Region']))
+            evidenceThisRow.append(int(row['TrafficType']))
+            evidenceThisRow.append(converterDic[row['VisitorType']])
+            evidenceThisRow.append(converterDic[row['Weekend']])
 
             evidence.append(evidenceThisRow)
-            labels.append(converterDic[row[17]])
+            labels.append(converterDic[row['Revenue']])
 
     return (evidence,labels)
 
@@ -117,7 +137,9 @@ def train_model(evidence, labels):
     fitted k-nearest neighbor model (k=1) trained on the data.
     """
 
-    fit(evidence, labels)
+    neigh = KNeighborsClassifier(n_neighbors=1)
+
+    return neigh.fit(evidence, labels)
 
     #ah: what to return?
 
@@ -139,7 +161,29 @@ def evaluate(labels, predictions):
     representing the "true negative rate": the proportion of
     actual negative labels that were accurately identified.
     """
+
+    count = len(labels)
+    realTrue = 0
+    predictTrue = 0
+    realFalse = 0
+    predictFalse = 0
+    for x in range(count):
+        if labels[x] == 1:
+            realTrue += 1
+            if predictions[x] == 1:
+                predictTrue += 1
+        if labels[x] == 0:
+            realFalse += 1
+            if predictions[x] == 0:
+                predictFalse += 1
     
+    sensitivity = float(predictTrue / realTrue)
+    specificity = float(predictFalse / realFalse)
+
+    return (sensitivity, specificity)
+
+
+
     
 
 
