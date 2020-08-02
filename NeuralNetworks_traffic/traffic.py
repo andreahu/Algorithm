@@ -3,6 +3,7 @@ import numpy as np
 import os
 import sys
 import tensorflow as tf
+from tensorflow.keras import layers
 
 from sklearn.model_selection import train_test_split
 
@@ -44,40 +45,6 @@ def main():
         print(f"Model saved to {filename}.")
 
 
-
-# #ah test main()
-# def main():
-
-#     img = cv2.imread('/Users/AndreaHu/Documents/Github/Algorithm/NeuralNetworks_traffic/gtsrb/39/00005_00012.ppm')
-#     print(type(img))
-#     # <class 'numpy.ndarray'>
-#     print(img.shape)
-#     # (40, 40, 3)
-
-#     # im.resize(IMG_WIDTH, IMG_HEIGHT)
-#     dim = (IMG_WIDTH, IMG_HEIGHT)
-#     img = cv2.resize(img, dim, interpolation = cv2.INTER_AREA)
-#     print(img.shape)
-#     #(30, 30, 3)
-
-#     print(img.dtype)
-#     # uint8
-
-"""
-    os.chdir("/Users/AndreaHu/Documents/Github/Algorithm/NeuralNetworks_traffic/gtsrb")
-    for root, dirs, files in os.walk(".", topdown = False):
-        for name in files:
-            print(os.path.join(root, name))
-        # for name in dirs:
-        #     print(os.path.join(root, name))
-"""
-
-
- 
-
-
-
-
 def load_data(data_dir):
     """
     Load image data from directory `data_dir`.
@@ -97,20 +64,22 @@ def load_data(data_dir):
     #useful links in links.txt
     images = []
     labels = []
+    dim = (IMG_WIDTH, IMG_HEIGHT)
 
-    os.chdir("/Users/AndreaHu/Documents/Github/Algorithm/NeuralNetworks_traffic/gtsrb")
+    os.chdir("gtsrb")
     for root, dirs, files in os.walk(".", topdown = False):
-        for dirName in dirs:
-            dirPath = os.path.join(root, dirName)
-            for name in files:
-                path = os.path.join(root, name)
+        for f in files:
+            path = os.path.join(root, f)
+            if path.endswith(".ppm"):
                 img = cv2.imread(path) #img is a numpy.ndarray
-                #resize
-                dim = (IMG_WIDTH, IMG_HEIGHT)
                 img = cv2.resize(img, dim, interpolation = cv2.INTER_AREA)
-                
-                images.append(imagies)
-                labels.append(dirPath)
+
+                images.append(img)
+
+                label = root.split(os.sep)[1]
+                labels.append(label)
+    
+    return (images, labels)
 
 
 
@@ -121,25 +90,27 @@ def get_model():
     `input_shape` of the first layer is `(IMG_WIDTH, IMG_HEIGHT, 3)`.
     The output layer should have `NUM_CATEGORIES` units, one for each category.
     """
-    # check handwriting.py
-    
-    # https://www.tensorflow.org/tutorials/images/classification 
-    # copy code for "create a new neural network using layers.Dropout"
 
-    model = Sequential([
-        data_augmentation,
+    # https://www.tensorflow.org/tutorials/images/classification 
+
+
+    model = tf.keras.models.Sequential([
         layers.experimental.preprocessing.Rescaling(1./255),
-        layers.Conv2D(16, 3, padding='same', activation='relu'),
-        layers.MaxPooling2D(),
-        layers.Conv2D(32, 3, padding='same', activation='relu'),
-        layers.MaxPooling2D(),
-        layers.Conv2D(64, 3, padding='same', activation='relu'),
-        layers.MaxPooling2D(),
-        layers.Dropout(0.2),
+        layers.Conv2D(32, (3, 3), activation="relu", input_shape=(IMG_WIDTH, IMG_HEIGHT, 3)),
+        layers.MaxPooling2D(pool_size=(2, 2)),
         layers.Flatten(),
-        layers.Dense(128, activation='relu'),
-        layers.Dense(num_classes)
+        layers.Dense(128, activation="relu"),
+        layers.Dropout(0.2),
+        layers.Dense(NUM_CATEGORIES, activation='softmax'),
     ])
+
+    model.compile(
+        optimizer="adam",
+        loss="categorical_crossentropy",
+        metrics=["accuracy"]
+    )
+
+    return model
 
 
 
