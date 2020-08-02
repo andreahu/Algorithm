@@ -12,7 +12,7 @@ IMG_HEIGHT = 30
 NUM_CATEGORIES = 43
 TEST_SIZE = 0.4
 
-
+"""
 def main():
 
     # Check command-line arguments
@@ -43,6 +43,33 @@ def main():
         model.save(filename)
         print(f"Model saved to {filename}.")
 
+"""
+
+#ah test main()
+def main():
+
+    im = cv2.imread('/Users/AndreaHu/Documents/Github/Algorithm/NeuralNetworks_traffic/gtsrb/39/00005_00012.ppm')
+    print(type(im))
+    # <class 'numpy.ndarray'>
+    print(im.shape)
+    # (40, 40, 3)
+    print(im.dtype)
+    # uint8
+
+"""
+    os.chdir("/Users/AndreaHu/Documents/Github/Algorithm/NeuralNetworks_traffic/gtsrb")
+    for root, dirs, files in os.walk(".", topdown = False):
+        for name in files:
+            print(os.path.join(root, name))
+        # for name in dirs:
+        #     print(os.path.join(root, name))
+"""
+
+
+ 
+
+
+
 
 def load_data(data_dir):
     """
@@ -58,7 +85,25 @@ def load_data(data_dir):
     be a list of integer labels, representing the categories for each of the
     corresponding `images`.
     """
-    raise NotImplementedError
+    #os.walk() https://www.tutorialspoint.com/python3/os_walk.htm
+    #cv2.imread() https://www.geeksforgeeks.org/python-opencv-cv2-imread-method/#:~:text=OpenCV%2DPython%20is%20a%20library,method%20returns%20an%20empty%20matrix.
+    #check links.txt
+    images = []
+    labels = []
+
+    os.chdir("/Users/AndreaHu/Documents/Github/Algorithm/NeuralNetworks_traffic/gtsrb")
+    for root, dirs, files in os.walk(".", topdown = False):
+        for dirName in dirs:
+            dirPath = os.path.join(root, dirName)
+            for name in files:
+                path = os.path.join(root, name)
+                img = cv2.imread(path) #img is a numpy.ndarray
+                img.resize(IMG_WIDTH, IMG_HEIGHT)
+                
+                images.append(imagies)
+                labels.append(dirPath)
+
+
 
 
 def get_model():
@@ -67,7 +112,11 @@ def get_model():
     `input_shape` of the first layer is `(IMG_WIDTH, IMG_HEIGHT, 3)`.
     The output layer should have `NUM_CATEGORIES` units, one for each category.
     """
-    raise NotImplementedError
+    # check handwriting.py
+    # https://www.tensorflow.org/tutorials/images/classification copy code for "Creating a new network with Dropouts"
+
+    
+
 
 
 if __name__ == "__main__":
