@@ -48,9 +48,18 @@ def main():
 """
 def main():
 
-    thelist = tokenize(" this is so cool()*+, - Andrea own an be some OKK")
-    for word in thelist:
-        print(word)
+    # filedict = load_files("corpus")
+    # theKeys = filedict.keys()
+
+    # for k in theKeys:
+    #     print(k)
+
+    # print(filedict["probability.txt"])
+
+
+    # thelist = tokenize(" this is so cool()*+, - Andrea own an be some OKK")
+    # for word in thelist:
+    #     print(word)
 
 
 
@@ -59,17 +68,18 @@ def load_files(directory):
     Given a directory name, return a dictionary mapping the filename of each
     `.txt` file inside that directory to the file's contents as a string.
     """
-    fileDict = []
+    fileDict = dict()
 
     os.chdir(directory)
     for root, dirs, files in os.walk(".", topdown = False):
         for f in files:
             path = os.path.join(root, f)
             if path.endswith(".txt"):
-                with open(f"{directory}{path}", 'r') as file: #currently doesn't work
-                    # with open works if I use absolute path: #with open('/Users/AndreaHu/Documents/Github/Algorithm/NaturalLanguage_questions/corpus/python.txt', 'r') as file:
+                with open(f"{path}", 'r') as file: 
                     data = file.read().replace('\n', '')
-                    fileDict[path] = data
+                    fileDict[f] = data
+
+    return fileDict
 
 
 def tokenize(document):
