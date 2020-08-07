@@ -86,19 +86,25 @@ def np_chunk(tree):
     whose label is "NP" that does not itself contain any other
     noun phrases as subtrees.
     """
-    # https://www.nltk.org/_modules/nltk/tree.html
+    # used this class https://www.nltk.org/_modules/nltk/tree.html
     # TA mentioned .label(),  leaves() could be useful, 
     # could use subtrees() to see if there's any NP under the current NP
+    # TA says no need to use recursion since our example goes to 2 levels the deepest
 
     npList = []
-    labels = tree.label()
-    leaves = tree.leaves()
-
-    for subtree in tree.subtrees():
 
 
-    
+    # AH: not sure where to use the leaves() function
 
+    for s in tree.subtrees():
+        if s.label() == "NP":
+            for ss in s.subtrees():
+                subNPfound = 0
+                if ss.label() == "NP":
+                    npList.append(ss)
+                    subNPfound = 1
+                if subNPfound == 0:
+                    npList.append(s)
 
     return npList
     
