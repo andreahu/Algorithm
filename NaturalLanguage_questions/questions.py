@@ -7,7 +7,7 @@ import math
 FILE_MATCHES = 1
 SENTENCE_MATCHES = 1
 
-"""
+
 def main():
 
     # Check command-line arguments
@@ -27,6 +27,8 @@ def main():
 
     # Determine top file matches according to TF-IDF
     filenames = top_files(query, file_words, file_idfs, n=FILE_MATCHES)
+
+    print(filenames)
 
     # Extract sentences from top files
     sentences = dict()
@@ -62,7 +64,7 @@ def main():
     # for word in thelist:
     #     print(word)
 
-
+"""
 
 def load_files(directory):
     """
@@ -113,9 +115,7 @@ def compute_idfs(documents):
     Any word that appears in at least one of the documents should be in the
     resulting dictionary.
     """
-    #AH: note the situation denaminator is zero
-
-    
+    #idf (Inverse Document Frequency) = log(TotalDocuments / NumDocumentsContaining(word))
 
     # Get all words in documents
     words = set()
@@ -126,7 +126,10 @@ def compute_idfs(documents):
     idfs = dict()
     for word in words:
         f = sum(word in documents[filename] for filename in documents)
-        idf = math.log(len(documents) / f)
+        if f == 0: #denominator is 0
+            idf = 0
+        else:
+            idf = math.log(len(documents) / f)
         idfs[word] = idf
 
     return idfs
@@ -139,7 +142,32 @@ def top_files(query, files, idfs, n):
     to their IDF values), return a list of the filenames of the the `n` top
     files that match the query, ranked according to tf-idf.
     """
-    raise NotImplementedError
+    #tf-idf: term frequency of each word * the idf 
+    #use sorted function with key https://www.geeksforgeeks.org/sorted-function-python/
+    #user .count()
+
+
+    # Calculate TF-IDFs
+    tfidfs = dict()
+    for filename in files:
+        tfidfs[filename] = 0
+        for word in files[filename]:
+            if word in query:
+                tf = files[filename][word]
+                tfidf = tf * idfs[word]
+                tfidfs[filename] = tfidfs[filename] + tfidf
+
+    # Sort and get top n files
+    sort_files = sorted(tfidfs.items(), key=lambda x: x[1], reverse=True)
+
+    fileList = []
+    count = 0
+    for filename in sort_files:
+        fileList.append(filename)
+        count = count + 1
+        if count == n:
+            return fileList
+
 
 
 def top_sentences(query, sentences, idfs, n):
@@ -150,7 +178,27 @@ def top_sentences(query, sentences, idfs, n):
     the query, ranked according to idf. If there are ties, preference should
     be given to sentences that have a higher query term density.
     """
-    raise NotImplementedError
+    # Calculate sum_IDFs for each sentence
+    sentenceIdfs = dict()
+    for s in sentences:
+        sentenceIdfs[s] = 0
+        for word in sentences[s]:
+            if word in query:
+                idf = idfs[word]
+                sentenceIdfs[s] = sentenceIdfs[s] + tfidf
+
+    # Sort and get top n sentences
+    sort_sentences = sorted(sentenceIdfs.items(), key=lambda x: x[1], reverse=True)
+
+    sentenceList = []
+    count = 0
+    for s in sort_sentences:
+        sentenceList.append(s)
+        count = count + 1
+        if count == n:
+            return sentenceList
+    
+    
 
 
 if __name__ == "__main__":
