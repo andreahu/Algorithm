@@ -28,8 +28,6 @@ def main():
     # Determine top file matches according to TF-IDF
     filenames = top_files(query, file_words, file_idfs, n=FILE_MATCHES)
 
-    print(filenames)
-
     # Extract sentences from top files
     sentences = dict()
     for filename in filenames:
@@ -48,24 +46,6 @@ def main():
         print(match)
 
 
-"""
-def main():
-
-    # filedict = load_files("corpus")
-    # theKeys = filedict.keys()
-
-    # for k in theKeys:
-    #     print(k)
-
-    # print(filedict["probability.txt"])
-
-
-    # thelist = tokenize(" this is so cool()*+, - Andrea own an be some OKK")
-    # for word in thelist:
-    #     print(word)
-
-"""
-
 def load_files(directory):
     """
     Given a directory name, return a dictionary mapping the filename of each
@@ -79,7 +59,7 @@ def load_files(directory):
             path = os.path.join(root, f)
             if path.endswith(".txt"):
                 with open(f"{path}", 'r') as file: 
-                    data = file.read().replace('\n', '')
+                    data = file.read()
                     fileDict[f] = data
 
     return fileDict
@@ -153,7 +133,7 @@ def top_files(query, files, idfs, n):
         tfidfs[filename] = 0
         for word in files[filename]:
             if word in query:
-                tf = files[filename][word]
+                tf = files[filename].count(word)
                 tfidf = tf * idfs[word]
                 tfidfs[filename] = tfidfs[filename] + tfidf
 
@@ -161,11 +141,9 @@ def top_files(query, files, idfs, n):
     sort_files = sorted(tfidfs.items(), key=lambda x: x[1], reverse=True)
 
     fileList = []
-    count = 0
     for filename in sort_files:
-        fileList.append(filename)
-        count = count + 1
-        if count == n:
+        fileList.append(filename[0])
+        if len(fileList) == n:
             return fileList
 
 
@@ -181,24 +159,25 @@ def top_sentences(query, sentences, idfs, n):
     # Calculate sum_IDFs for each sentence
     sentenceIdfs = dict()
     for s in sentences:
-        sentenceIdfs[s] = 0
+        appear = 0
+        idf_sum = 0
         for word in sentences[s]:
             if word in query:
                 idf = idfs[word]
-                sentenceIdfs[s] = sentenceIdfs[s] + tfidf
+                appear = appear + 1
+                idf_sum = idf_sum + idf
+        sentenceIdfs[s] = (idf_sum, float(appear)/float(len(sentences[s])))
 
     # Sort and get top n sentences
-    sort_sentences = sorted(sentenceIdfs.items(), key=lambda x: x[1], reverse=True)
+    sort_sentences = sorted(sentenceIdfs.items(), key=lambda x: (x[1][0],x[1][1]), reverse=True)
 
     sentenceList = []
-    count = 0
     for s in sort_sentences:
-        sentenceList.append(s)
-        count = count + 1
-        if count == n:
+        sentenceList.append(s[0])
+        if len(sentenceList) == n:
             return sentenceList
     
-    
+
 
 
 if __name__ == "__main__":
